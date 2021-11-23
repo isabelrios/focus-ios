@@ -9,25 +9,30 @@ locales:
       - br
       - bs
       - ca
+      - co
       - cs
       - cy
       - da
       - de
       - dsb
       - el
-      - en-US
+      - en
+      - en-GB
       - eo
       - es-AR
-      - es_CL
+      - es-CL
       - es-ES
       - es-MX
       - eu
       - fa
       - fi
+      - fil
       - fr
-      - ga-IE
+      - ga
       - gd
       - gu-IN
+      - he
+      - hi-IN
       - hsb
       - hu
       - hy-AM
@@ -47,10 +52,10 @@ locales:
       - mr
       - ms
       - my
-      - nb-NO
-      - nb-NP
+      - nb
+      - ne-NP
       - nl
-      - nn-NO
+      - nn
       - pl
       - pt-BR
       - pt-PT
@@ -60,11 +65,10 @@ locales:
       - sk
       - sl
       - sq
-      - sv-SE
+      - sv
       - ta
       - te
       - th
-      - tl
       - tr
       - uk
       - ur
