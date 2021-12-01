@@ -12,16 +12,14 @@ BLOCKZILLA_PROJECT = "Blockzilla.xcodeproj/project.pbxproj"
 github_access_token = os.getenv("GITHUB_TOKEN")
 
 def get_latest_rust_components_version():
-    g = Github(github_access_token)
+    g = Github()
     repo = g.get_repo(GITHUB_REPO)
 
     latest_tag = repo.get_tags()[0].name
     latest_commit = str(repo.get_tags()[0].commit)
     only_commit = re.findall(r'"([^"]*)"', latest_commit)
-    print((only_commit))
-    print(str(latest_tag))
-    return (str(latest_tag), only_commit)
 
+    return (str(latest_tag), str(only_commit[0]))
 
 def read_rust_components_tag_version():
     # Read Package to find the current rust-component version
