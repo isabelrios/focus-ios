@@ -118,11 +118,13 @@ def main():
     current_tag, current_commit = read_rust_components_tag_version()
     current_min_version  = read_project_min_version()
     if compare_versions(current_tag, as_repo_tag):
-        print("Compared")
 
         update_spm_file(current_tag, current_commit, as_repo_tag, as_repo_commit, BLOCKZILLA)
         update_proj_file(current_min_version, as_repo_tag, BLOCKZILLA_PROJECT)
 
+        # Save the newer version to be used in the PR info
+        f= open("github-actions-scripts/newest_tag.txt","w+")
+        f.write(as_repo_tag+"\n")
 
 if __name__ == '__main__':
     main()
