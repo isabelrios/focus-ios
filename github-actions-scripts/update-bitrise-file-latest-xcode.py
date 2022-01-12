@@ -11,7 +11,7 @@ import semver
 from requests.exceptions import HTTPError
 
 
-BITRISE_STACK_INFO = 'https://app.bitrise.io/app/f9ba050939a50ea4/all_stack_info'
+BITRISE_STACK_INFO = 'https://app.bitrise.io/app/6c06d3a40422d10f/all_stack_info'
 '''
 curl ${BITRISE_STACK_INFO} | jq ' . | keys'
 [
