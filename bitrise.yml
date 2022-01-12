@@ -1,4 +1,3 @@
----
 format_version: '5'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: ios
@@ -12,6 +11,10 @@ trigger_map:
 - tag: "*"
   workflow: release
 
+meta:
+  bitrise.io:
+    stack: osx-xcode-13.2.x
+    machine_type_id: g2.8core
 
 workflows:
 
@@ -28,10 +31,6 @@ workflows:
             #!/usr/bin/env bash
             ./checkout.sh
         title: ContentBlockerGen
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-
 
   set-project-version:
     steps:
@@ -55,9 +54,6 @@ workflows:
         - build_version_offset: '3250'
         - plist_path: OpenInFocus/Info.plist
         title: Set OpenInFocus version numbers
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
     before_run: []
 
 
@@ -72,9 +68,6 @@ workflows:
             /usr/libexec/PlistBuddy -c "Add :NimbusServerURL string ${NIMBUS_SERVER_URL}" Blockzilla/Info.plist
             /usr/libexec/PlistBuddy -c "Add :NimbusAppName string ${NIMBUS_APP_NAME}" Blockzilla/Info.plist
             /usr/libexec/PlistBuddy -c "Add :NimbusAppChannel string ${NIMBUS_APP_CHANNEL}" Blockzilla/Info.plist
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
     before_run: []
 
 
@@ -88,9 +81,6 @@ workflows:
             set -x
             /usr/libexec/PlistBuddy -c "Add :com.apple.developer.web-browser bool true" Focus.entitlements
             /usr/libexec/PlistBuddy -c "Add :com.apple.developer.web-browser bool true" Klar.entitlements
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
     before_run: []
 
 
@@ -123,10 +113,10 @@ workflows:
         stack: osx-xcode-13.0.x
         machine_type_id: g2.8core
     before_run:
-      - clone-and-build-dependencies
-      - set-project-version
-      - set-default-browser-entitlement
-      - configure-nimbus
+    - clone-and-build-dependencies
+    - set-project-version
+    - set-default-browser-entitlement
+    - configure-nimbus
 
 
   runParallelTests:
@@ -148,10 +138,6 @@ workflows:
         inputs:
         - access_token: "$FOCUS_PARALLEL"
     - deploy-to-bitrise-io@1: {}
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.4core
 
 
   runFocus:
@@ -170,7 +156,7 @@ workflows:
 
             # Check if it is a scheduled or regular build
             # to select the testPlan to run
-            
+
             if [[ $BITRISE_GIT_MESSAGE == Schedule* ]]
             then
                 echo "Scheduled build, running Full Functional Tests"
@@ -202,8 +188,7 @@ workflows:
         - scheme: Focus
     - xcode-test@2:
         inputs:
-        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-            CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan $TEST_PLAN_NAME
+        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan $TEST_PLAN_NAME
         - scheme: Focus
     - deploy-to-bitrise-io@1: {}
     - slack@3:
@@ -212,10 +197,6 @@ workflows:
         - channel: "#focus-ios-alerts"
         - message: "The build run the testPlan: $TEST_PLAN_NAME"
         - webhook_url: "$SLACK_WEBHOOK"
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.8core
 
   runKlar:
     steps:
@@ -264,8 +245,7 @@ workflows:
         - scheme: Klar
     - xcode-test@2:
         inputs:
-        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-            CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan "$TEST_PLAN_NAME"
+        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan "$TEST_PLAN_NAME"
         - scheme: Klar
     - deploy-to-bitrise-io@1: {}
     - slack@3:
@@ -274,10 +254,7 @@ workflows:
         - channel: "#focus-ios-alerts"
         - message: "The build run the testPlan: $TEST_PLAN_NAME"
         - webhook_url: "$SLACK_WEBHOOK"
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.8core
+
   runFocus-iPad:
     steps:
     - activate-ssh-key@4:
@@ -306,21 +283,16 @@ workflows:
         - scheme: Focus
     - xcode-test@2:
         inputs:
-        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-            CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan FullFunctionalTests
+        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan FullFunctionalTests
         - scheme: Focus
         - simulator_device: iPad Air (4th generation)
     - xcode-test@2:
         inputs:
-        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-            CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan SmokeTest
+        - xcodebuild_test_options: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -maximum-parallel-testing-workers 2 -testPlan SmokeTest
         - scheme: Focus
         - simulator_device: iPad Air (4th generation)
     - deploy-to-bitrise-io@1: {}
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.8core
+
   L10nScreenshotsTests:
     steps:
     - activate-ssh-key@4:
@@ -382,10 +354,7 @@ workflows:
     - deploy-to-bitrise-io@1.10:
         inputs:
         - deploy_path: artifacts/
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.4core
+
   L10nBuild:
     steps:
     - activate-ssh-key@4:
@@ -424,10 +393,6 @@ workflows:
         inputs:
         - deploy_path: l10n-screenshots/en-US/en-US
         - is_compress: 'true'
-    meta:
-      bitrise.io:
-        stack: osx-xcode-13.0.x
-        machine_type_id: g2.4core
 
 app:
   envs:
