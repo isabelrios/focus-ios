@@ -26,6 +26,15 @@ jobs:
     - name: Modify bitrise.yml 
       run: |
         python ./github-actions-scripts/update-bitrise-file-latest-xcode.py
+    - name: Get new xcode version to be used in the PR info
+      run: |
+        cd github-actions-scripts/
+        chmod u+x read-xcode-new-version.sh
+        echo "version=$(./read-xcode-new-version.sh)" >> $GITHUB_ENV
+    - name: Remove temp file created to store the tag info
+      run: |
+        cd github-actions-scripts/
+        [ ! -e newest_xcode.txt ] || rm newest_xcode.txt
     - name: Commit and push if bitrise.yml changed
       run: |-
         git diff
@@ -37,6 +46,7 @@ jobs:
         commit-message: Auto Update Bitrise.YML
         author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
         committer: GitHub <noreply@github.com>
-        title: Update Bitrise NewXcodeVersions Workflow Xcode Stack
-        branch: update-br-new-xcode-version
+        title: Update Bitrise NewXcodeVersions Workflow Xcode Stack ${{ env.version }}
+        branch: update-br-new-xcode-version-${{ env.version }}
         token: ${{ secrets.GITHUB_TOKEN }}
+        labels: Do Not Land

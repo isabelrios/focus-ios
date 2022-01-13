@@ -99,3 +99,7 @@ if __name__ == '__main__':
                 obj_yaml.dump(y, tmpfile)
                 copyfile(tmp_file, BITRISE_YML)
                 os.remove(tmp_file)
+
+            # Save the newer xcode version to be used in the PR info
+            f= open("github-actions-scripts/newest_xcode.txt","w+")
+            f.write(y['meta']['bitrise.io']['stack']+"\n")
