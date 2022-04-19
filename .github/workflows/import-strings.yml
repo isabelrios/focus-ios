@@ -29,7 +29,9 @@ jobs:
       run: |-
            fileChanged=$( git diff -- Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved )
            echo $fileChanged
-           if ! [ -z "$fileChanged" ]; then echo "createPR=true" >> $GITHUB_ENV; fi
+           if [ -z "$fileChanged" ]; then echo "createPR=true" >> $GITHUB_ENV
+           else "createPR=false" >> $GITHUB_ENV
+           fi
     - name: Create Pull Request
       if: ${{ env.createPR }}
       uses: peter-evans/create-pull-request@v3
