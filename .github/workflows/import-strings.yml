@@ -27,7 +27,8 @@ jobs:
       run: sh ./tools/import-strings.sh
     - name: Update new strings
       run: |-
-           fileChanged=!$(`git diff -- Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`) >> GITHUB_ENV
+           fileChanged=$( git diff -- Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved )
+           echo $fileChanged
     - name: Create Pull Request
       if: ${{ env.fileChanged }}
       uses: peter-evans/create-pull-request@v3
